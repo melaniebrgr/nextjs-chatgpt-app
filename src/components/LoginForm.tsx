@@ -9,11 +9,6 @@ export function LoginForm() {
   return (
     <form action={action}>
       <div>
-        <label htmlFor="username">Username</label>
-        <input id="username" name="username" placeholder="Username" />
-      </div>
-      {state?.errors?.username && <p>{state.errors.username}</p>}
-      <div>
         <label htmlFor="email">Email</label>
         <input id="email" name="email" type="email" placeholder="Email" />
       </div>
