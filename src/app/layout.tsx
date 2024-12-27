@@ -32,6 +32,9 @@ export default function RootLayout({
         <Link href="/about" className="mx-5 font-light">
           About
         </Link>
+        <Link href="/chat" className="mx-5 font-light">
+          Chat
+        </Link>
       </div>
       <div></div>
     </header>
