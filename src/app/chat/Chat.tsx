@@ -13,6 +13,7 @@ interface Message {
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [message, setMessage] = useState("")
+  const [chatId, setChatId] = useState<number | undefined>(undefined)
 
   const onClick = async () => {
     const completions = await getCompletion([
@@ -21,9 +22,10 @@ export default function Chat() {
         role: "user",
         content: message,
       },
-    ]);
+    ], chatId);
     setMessage("");
     setMessages(completions.messages);
+    setChatId(completions.chatId);
   }  
 
   return (
