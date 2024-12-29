@@ -75,7 +75,6 @@ export const getChatByUserIdAndMessages = async (userId: number): Promise<ChatWi
     .select('*')
     .eq('user_id', userId)
     .range(0, 5)
-    console.log('chatDB', chatDB);
   if (error || !chatDB) throw new Error(error!.message)
 
   await Promise.all(chatDB.map(async (chat) => {
