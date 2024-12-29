@@ -1,4 +1,4 @@
-import { CreateChatDB, CreateMsgDB } from "./definitions"
+import { ChatWithMsgsDB, CreateChatDB, CreateMsgDB } from "./definitions"
 import { supabase } from "./utils"
 
 export const createChat = async (chat: CreateChatDB) => {
@@ -65,4 +65,32 @@ export const getChatByIdAndMessages = async (chatId: number) => {
     chat: chatDB,
     messages: msgsDB
   }
+}
+
+export const getChatByUserIdAndMessages = async (userId: number): Promise<ChatWithMsgsDB[]> => {
+  const chats = [] as ChatWithMsgsDB[]
+
+  const { data: chatDB, error } = await supabase
+    .from('chat')
+    .select('*')
+    .eq('user_id', userId)
+    .range(0, 5)
+    console.log('chatDB', chatDB);
+  if (error || !chatDB) throw new Error(error!.message)
+
+  await Promise.all(chatDB.map(async (chat) => {
+    const { data: msgsDB, error: msgsErr } = await supabase
+      .from('message')
+      .select('*')
+      .eq('chat_id', chat.id)
+
+    if (msgsErr || !msgsDB) throw new Error(msgsErr.message)
+
+    chats.push({
+      chat,
+      messages: msgsDB ?? []
+    })
+  }))
+
+  return chats
 }

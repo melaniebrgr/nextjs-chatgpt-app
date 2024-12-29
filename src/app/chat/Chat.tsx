@@ -1,10 +1,11 @@
 "use client";
 import { useRef, useState } from "react"
 import { useRouter } from 'next/navigation'
-import { getCompletion } from "@/actions/getCompletion";
+import { getCompletion } from "@/actions/getCompletion"
 import { Input } from "@/components/input"
 import { Button } from "@/components/button"
-import { MsgOpenAI } from "@/lib/db/definitions";
+import { MsgOpenAI } from "@/lib/db/definitions"
+import Transcript from "../Transcript"
 
 interface ChatProps {
   id?: number;
@@ -42,22 +43,7 @@ export default function Chat({
 
   return (
     <div className="flex flex-col">
-      {messages.map((message, i) => (
-        <div
-          key={i}
-          className={`mb-5 flex flex-col ${
-            message.role === "user" ? "items-end" : "items-start"
-          }`}
-        >
-          <div
-            className={`${
-              message.role === "user" ? "bg-blue-500" : "bg-gray-500 text-black"
-            } rounded-md py-2 px-8`}
-          >
-            {message.content}
-          </div>
-        </div>
-      ))}
+      <Transcript messages={messages} truncate={false} />
       <div className="flex border-t-2 border-t-gray-500 pt-3 mt-3">
         <Input
           className="flex-grow text-xl"

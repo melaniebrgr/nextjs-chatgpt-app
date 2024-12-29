@@ -1,18 +1,12 @@
 import Chat from "../Chat" 
 import { getChatByIdAndMessages } from "@/lib/db/chat";
-import { cookies } from 'next/headers'
-import { USER_ID_COOKIE } from '@/lib/auth/constants';
+import { getUserIdFromCookie } from "@/lib/auth/utils";
 import { notFound, redirect } from "next/navigation";
 
 interface ChatDetailsRouteProps {
     params: {
         chatId: number;
     };
-}
-
-const getUserIdFromCookie = async () => {
-  const cookieStore = await cookies()
-  return +(cookieStore.get(USER_ID_COOKIE)?.value ?? NaN)
 }
 
 export default async function ChatDetailsRoute({ params }: ChatDetailsRouteProps) {
