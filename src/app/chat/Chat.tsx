@@ -1,20 +1,25 @@
 "use client";
 import { useRef, useState } from "react"
-
+import { useRouter } from 'next/navigation'
 import { getCompletion } from "@/actions/getCompletion";
 import { Input } from "@/components/input"
 import { Button } from "@/components/button"
+import { MsgOpenAI } from "@/lib/db/definitions";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+interface ChatProps {
+  id?: number;
+  messages?: MsgOpenAI[];
 }
 
-export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([])
+export default function Chat({
+  id,
+  messages: initialMessages = []
+}: ChatProps) {
+  const [messages, setMessages] = useState<MsgOpenAI[]>(initialMessages)
   const [message, setMessage] = useState("")
   // useRef instead of useState to avoid re-render when chatID changes
-  const chatId = useRef<number | undefined>(undefined);
+  const chatId = useRef<number | undefined>(id);
+  const router = useRouter()
 
   const onClick = async () => {
     const completions = await getCompletion([
@@ -24,9 +29,15 @@ export default function Chat() {
         content: message,
       },
     ], chatId.current);
+
+    if (!chatId.current) {
+      router.push(`/chat/${completions.chatId}`);
+      router.refresh();
+    }
+    
+    chatId.current = completions.chatId;
     setMessage("");
     setMessages(completions.messages);
-    chatId.current = completions.chatId;
   }  
 
   return (

@@ -44,3 +44,25 @@ export const getLatestChatAndMessages = async () => {
     messages: msgsDB
   }
 }
+
+export const getChatByIdAndMessages = async (chatId: number) => {
+  const { data: chatDB, error } = await supabase
+    .from('chat')
+    .select('*')
+    .eq('id', chatId)
+    .single()
+
+  if (error || !chatDB) throw new Error(error!.message)
+
+  const { data: msgsDB, error: msgsErr } = await supabase
+    .from('message')
+    .select('*')
+    .eq('chat_id', chatDB.id)
+
+  if (msgsErr || !msgsDB) throw new Error(msgsErr.message)
+
+  return {
+    chat: chatDB,
+    messages: msgsDB
+  }
+}
